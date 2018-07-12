@@ -5,7 +5,7 @@ import * as storage from './storage.js';
 // Called when user searches for a single page
 // Generates detailed plot (horizontal bar chart) in new tab
 function SearchForPage(){
-  let page = document.getElementById("page").value;
+  let page = document.getElementById('page').value;
 
   const options = {
     shouldSort: true,
@@ -22,12 +22,12 @@ function SearchForPage(){
   let fuse = new Fuse(pages, options);
   let result = fuse.search(page);
 
-  let error = document.getElementById("error_page");
+  let error = document.getElementById('error_page');
   if (result.length < 1){
-    error.innerHTML = "Could not find that page!"
+    error.innerHTML = 'Could not find that page!'
     return;
   }
-  error.innerHTML = "";
+  error.innerHTML = '';
 
   // Store data for closest match to use for detailed plot
   let index = result[0].item;

@@ -28,7 +28,7 @@ function SetDataSource(){
 
 // Get data source from dropdown (either 'CT' or 'PP')
 function GetDataSource(){
-  let dropdown = document.getElementById("data-source");
+  let dropdown = document.getElementById('data-source');
   let source = dropdown.options[dropdown.selectedIndex].value;
   return source;
 }

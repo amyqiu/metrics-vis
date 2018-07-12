@@ -21,9 +21,9 @@ function GetRoundedNumber(string){
 // Parses Cluster Telemetry data
 function ParseCTData(raw_data){
   let trace_names = [
-    "Thread Renderer Compositor Time",
-    "Thread Total Fast Path Time",
-    "Thread Total All CPU Time"
+    'Thread Renderer Compositor Time',
+    'Thread Total Fast Path Time',
+    'Thread Total All CPU Time'
   ];
 
   let headers = raw_data[0];

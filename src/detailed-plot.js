@@ -2,17 +2,17 @@ import * as storage from './storage.js';
 
 // Update if new CT metrics added
 const CT_TRACE_NAMES = [
-  "Thread<br> Renderer Time",
-  "Thread Total<br> Fast Path Time",
-  "Thread Total<br> All CPU Time"
+  'Thread<br> Renderer Time',
+  'Thread Total<br> Fast Path Time',
+  'Thread Total<br> All CPU Time'
 ];
 
 // Update if new Pinpoint metrics added
 const PINPOINT_TRACE_NAMES = [
-  "Frame Times",
-  "Mean<br> Frame Time",
-  "Mean Input<br> Event Latency",
-  "Mean Main<br> Thread Scroll<br> Latency"
+  'Frame Times',
+  'Mean<br> Frame Time',
+  'Mean Input<br> Event Latency',
+  'Mean Main<br> Thread Scroll<br> Latency'
 ]
 
 // Default plotly colors, to match main vertical plot
@@ -58,8 +58,8 @@ function CreateDetailedPlot(doc){
     curr_values[i] = point.data[i];
     values.push(curr_values);
 
-    let hover_text = new Array(point.data.length).fill("");
-    hover_text[i] = point.data[i] + " s";
+    let hover_text = new Array(point.data.length).fill('');
+    hover_text[i] = point.data[i] + ' s';
     hover_texts.push(hover_text);
 
     sum += point.data[i];
@@ -84,9 +84,9 @@ function CreateDetailedPlot(doc){
     };
 
     if (i == 0){
-      trace.hoverinfo = "none";
+      trace.hoverinfo = 'none';
     } else {
-      trace.hoverinfo = "text";
+      trace.hoverinfo = 'text';
       trace.hovertext = hover_texts[i-1];
     }
 

@@ -29,7 +29,7 @@ function InitializeAnnotations(plot_div){
           bordercolor: '#404040',
           arrowcolor: '#404040 ',
           borderpad: 10,
-          text: "<a rel='external'>" + point.x + "</a>",
+          text: '<a rel="external">' + point.x + '</a>',
           captureevents: true
       };
 

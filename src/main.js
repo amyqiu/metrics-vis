@@ -9,7 +9,6 @@ import './css/styles.css';
 let $script = require('scriptjs');
 
 const scripts = [
-  'https://www.papaparse.com/resources/js/papaparse.js', 
   'https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js',
   'https://cdn.plot.ly/plotly-latest.min.js',
   'https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.0.4/fuse.min.js'
@@ -17,11 +16,9 @@ const scripts = [
 
 const TEMPLATE = '<div class="metrics-vis">' +
   '  <div>' +
-  '    <input type="number" id="start" placeholder="Starting Percentile">' +
-  '    <input type="number" id="end" placeholder="Ending Percentile">' +
+  '    <input type="number" id="start" placeholder="Start %ile">' +
+  '    <input type="number" id="end" placeholder="End %ile">' +
   '    <span class="button" id="submit">Submit</span>' +
-  '  </div>' +
-  '  <div>' +
   '    <input type="text" id="page" placeholder="Page Name">' +
   '    <span class="button green" id="submit-page">Detailed Plot</span>' +
   '    <p id="error_page"></p>' +

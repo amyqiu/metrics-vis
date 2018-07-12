@@ -14,7 +14,6 @@
 }
 
 .metrics-vis input[type=text], .metrics-vis input[type=number] {
-  width: 20%;
   padding: 12px 20px;
   margin: 8px 0;
   display: inline-block;
@@ -28,7 +27,6 @@
   -webkit-border-radius: 4;
   -moz-border-radius: 4;
   border-radius: 4px;
-  font-family: Arial;
   color: #ffffff;
   font-size: 16px;
   background: #3498db;
@@ -48,4 +46,16 @@
 
 .metrics-vis .button.green:hover {
   background: #32db43;
+}
+
+.metrics-vis #start, .metrics-vis #end {
+  width: 130px;
+}
+
+.metrics-vis #page {
+  width: 200px;
+}
+
+.metrics-vis #submit {
+  margin-right: 30px;
 }
