@@ -34,22 +34,23 @@ const TEMPLATE = '<div class="metrics-vis">' +
 
 let FIRST_TIME = true;
 
-function CreatePlot(div_id, file, data_source, plot_height, plot_width){
+function CreatePlot(div_id, file_object, data_source, plot_height, plot_width){
   storage.StoreDataSource(data_source);
   if (FIRST_TIME){
+    // Load external scripts and add selectors, then initialize the plot
     $script(scripts, function(){
       let div = document.getElementById(div_id);
       div.innerHTML += TEMPLATE;
 
       InitializeElements();
-      file.ProcessFile(file, plot_height, plot_width);
+      file.ProcessFile(file_object, plot_height, plot_width);
       FIRST_TIME = false;
     });
   } else {
-    file.ProcessFile(file, plot_height, plot_width);
+    // Only need to replot
+    file.ProcessFile(file_object, plot_height, plot_width);
   }
 }
-
 
 function InitializeElements(){
   // Initialize button onclicks
@@ -69,8 +70,6 @@ function InitializeElements(){
   });
 }
 
-module.exports = {
-  CreatePlot: function (div, filepath, data_source, height, width) {
-    CreatePlot(div, filepath, data_source, height, width);
-  },
-};
+export {
+  CreatePlot
+}

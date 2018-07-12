@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function(){
 // Parses data from file to create Plotly plot
 function UploadFile(){
   let file = document.getElementById('upload').files[0];
-  MetricsVis.CreatePlot('main', file, GetDataSource(), window.innerHeight * 0.8, window.innerWidth);
+  MetricsVis.CreatePlot('main', file, GetDataSource(), window.innerHeight * 0.8, window.innerWidth * 0.8);
 }
 
 // Called when user chooses a local file
