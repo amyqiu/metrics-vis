@@ -2,11 +2,16 @@
 
 This project explores ways to visualize Chrome metrics, specifically the durations of various steps in the rendering pipeline.
 
+## Demo
+To see a demo of the site, click [here](https://amyqiu.github.io/metrics-vis/index.html). The code for this lives in the /example folder.
+
 ## Setting Up
 
  1. Clone this repo
  2. Run npm install
- 3. Run npm run start and open the link provided
+ 3. Run npm run start and open the link provided (opens exmple/index.html)
+    * This starts Webpack Dev Server, which will generate a minified metrics-vis.js file in the dist/ folder whenever anything is src/ is changed
+    * It also copies the generated metrics-vis.js file to the example/ folder so that the page receives all new changes
 
 ## Using the Tool
 
