@@ -1,0 +1,33 @@
+{
+  "name": "metrics_vis",
+  "version": "1.0.0",
+  "description": "This project explores ways to visualize Chrome metrics, specifically the durations of various steps in the rendering pipeline.",
+  "main": "index.js",
+  "dependencies": {
+    "webpack": "^4.16.0",
+    "webpack-dev-server": "^3.1.4"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.4",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-preset-env": "^1.6.1",
+    "css-loader": "^1.0.0",
+    "eslint": "^3.9.1",
+    "eslint-loader": "^1.6.1",
+    "lodash": "^4.16.6",
+    "materialize-css": "^0.100.2",
+    "scriptjs": "^2.5.8",
+    "style-loader": "^0.21.0",
+    "webpack-cli": "^3.0.8",
+    "webpack-require-http": "^0.4.3"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --display-error-details && cp dist/metrics-vis.js example",
+    "start": "webpack-dev-server --content-base example"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "UNLICENSED"
+}

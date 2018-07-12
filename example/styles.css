@@ -1,0 +1,74 @@
+button {
+  margin-left: 20px;
+  margin-top: 10px;
+}
+
+.file{
+  margin-left: 60px;
+  font-family: Arial;
+}
+
+.source{
+  display: flex;
+}
+
+#select-label: {
+  flex: 0 0 35%;
+}
+
+#data-source-label: {
+  vertical-align: middle;
+}
+
+#styled-select {
+  flex: 0 0 240px ;
+  width: 240px;
+  overflow:hidden;
+  height: 40px;
+  margin-left: 15px;
+  margin-bottom: 20px;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+#styled-select select {
+  background: transparent;
+  width: 264px;
+  padding: 5px;
+  font-size: 16px;
+  border: 0;
+  height: 40px;
+  display: inline-block;
+  -webkit-appearance: none;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 4px;
+}
+
+.upload-btn-wrapper {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.btn {
+  margin-left: 20px;
+  -webkit-border-radius: 4;
+  -moz-border-radius: 4;
+  border-radius: 4px;
+  font-family: Arial;
+  color: #ffffff;
+  font-size: 16px;
+  background: #8036c4;
+  padding: 10px 20px 10px 20px;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.upload-btn-wrapper input[type=file] {
+  font-size: 100px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+}

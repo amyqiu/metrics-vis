@@ -1,0 +1,51 @@
+.metrics-vis{
+  font-family: Arial;
+}
+
+.metrics-vis .input-field{
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.metrics-vis #error_page{
+  color: red;
+  display: inline-block;
+  padding-left: 30px;
+}
+
+.metrics-vis input[type=text], .metrics-vis input[type=number] {
+  width: 20%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size:16px;
+  box-sizing: border-box;
+}
+
+.metrics-vis .button {
+  -webkit-border-radius: 4;
+  -moz-border-radius: 4;
+  border-radius: 4px;
+  font-family: Arial;
+  color: #ffffff;
+  font-size: 16px;
+  background: #3498db;
+  padding: 10px 20px 10px 20px;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.metrics-vis .button:hover {
+  background: #3cb0fd;
+  text-decoration: none;
+}
+
+.metrics-vis .button.green {
+  background: #2cb73a;
+}
+
+.metrics-vis .button.green:hover {
+  background: #32db43;
+}

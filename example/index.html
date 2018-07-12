@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Metrics Visualization</title>
+    <script src="metrics-vis.js"></script>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <script src="app.js"></script>
+      <div class="file">
+        <h1>Metrics Visualization</h1>
+        <div class="source">
+          <div id=select_label">
+            <p id="data-source-label">Data Source: </p>
+          </div>
+          <div id="styled-select">
+            <select id="data-source">
+              <option value="CT">Cluster Telemetry</option>
+              <option value="PP">Pinpoint</option>
+            </select>
+          </div>
+        <div class="upload">
+          <div class="upload-btn-wrapper">
+              <span class="btn">Upload a file</span>
+              <input type="file" accept=".csv, text/plain" id="upload" />
+          </div>
+        </div>
+    </div>
+    <div id="main">
+    </div>
+  </body>
+</html>
