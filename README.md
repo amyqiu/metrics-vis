@@ -10,7 +10,7 @@ This project explores ways to visualize Chrome metrics, specifically the duratio
    * You will not need to include any of these in your html file, since they are bundled into `metrics-vis.min.js`
 3. In your script, Call `MetricsVis.CreatePlot(div_id, file, data_source, plot_height, plot_width);`
    * `div_id`: ID of the div that the plot should be inserted into
-   * `file`: JS file object containig Cluster Telemetry or Pinpoint data
+   * `data`: JS 2D array containing Cluster Telemetry or Pinpoint data
    * `data_source`: either 'CT' for Cluster Telemetry or 'PP' for Pinpoint
    * `plot_height`/`plot_width`: dimensions of Plotly plot (in px)
 

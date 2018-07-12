@@ -1,6 +1,8 @@
-import * as file from './file.js';
+import * as parse from './parse.js';
 import * as percentile from './percentile.js';
+import * as plot from './plot.js';
 import * as search from './search.js';
+import * as spinner from './spinner.js';
 import * as storage from './storage.js';
 
 import './css/styles.css';
@@ -32,24 +34,37 @@ const TEMPLATE = '<div class="metrics-vis">' +
   '  </div>' +
   '</div>';
 
-let FIRST_TIME = true;
+let TEMPLATE_LOADED = false;
 
-function CreatePlot(div_id, file_object, data_source, plot_height, plot_width){
+function CreatePlot(div_id, data, data_source, plot_height, plot_width){
   storage.StoreDataSource(data_source);
-  if (FIRST_TIME){
+  if (!TEMPLATE_LOADED){
     // Load external scripts and add selectors, then initialize the plot
     $script(scripts, function(){
       let div = document.getElementById(div_id);
       div.innerHTML += TEMPLATE;
 
       InitializeElements();
-      file.ProcessFile(file_object, plot_height, plot_width);
-      FIRST_TIME = false;
+      TEMPLATE_LOADED = true;
+      GeneratePlot(data, data_source, plot_height, plot_width);
     });
   } else {
     // Only need to replot
-    file.ProcessFile(file_object, plot_height, plot_width);
+    GeneratePlot(data, data_source, plot_height, plot_width);
   }
+}
+
+function GeneratePlot(data, data_source, plot_height, plot_width){
+  spinner.LoadSpinner();
+
+  // Parse data based on its data_source (formats are different)
+  if (data_source == "CT"){
+    parse.ParseCTData(data);
+  } else{
+    parse.ParsePinpointData(data);
+  }
+  // Create new Plotly plot
+  plot.PlotData(true, plot_height, plot_width);
 }
 
 function InitializeElements(){
