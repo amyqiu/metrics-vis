@@ -34,17 +34,19 @@ const TEMPLATE = '<div class="metrics-vis">' +
 
 let FIRST_TIME = true;
 
-function CreatePlot(div, filepath, data_source, height, width){
+function CreatePlot(div_id, file, data_source, plot_height, plot_width){
   storage.StoreDataSource(data_source);
   if (FIRST_TIME){
     $script(scripts, function(){
+      let div = document.getElementById(div_id);
       div.innerHTML += TEMPLATE;
+
       InitializeElements();
-      file.ProcessFile(filepath, height, width);
+      file.ProcessFile(file, plot_height, plot_width);
       FIRST_TIME = false;
     });
   } else {
-    file.ProcessFile(filepath, height, width);
+    file.ProcessFile(file, plot_height, plot_width);
   }
 }
 

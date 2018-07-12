@@ -5,7 +5,7 @@ module.exports = {
   mode: 'production',
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: 'metrics-vis.js',
+    filename: 'metrics-vis.min.js',
     library: 'MetricsVis',
     libraryTarget: 'umd',
   },
