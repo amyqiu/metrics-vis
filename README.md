@@ -4,7 +4,7 @@ This project explores ways to visualize Chrome metrics, specifically the duratio
 
 ## Setting Up
 
- 1. cd into the metrics_vis folder (//depot/google3/experimental/users/amyqiu/metrics_vis)
+ 1. Clone this repo
  2. Run npm install
  3. Run npm run start and open the link provided
 
