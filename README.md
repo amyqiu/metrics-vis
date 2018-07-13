@@ -28,7 +28,7 @@ This project explores ways to visualize Chrome metrics, specifically the duratio
 
  1. Clone this repo
  2. Run `npm install`
- 3. Run `npm run start` and open the link provided to see a demo (opens `example/index.html`)
+ 3. Run `npm start` and open the link provided to see a demo (opens `example/index.html`)
     * This starts Webpack Dev Server, which will generate a minified `metrics-vis.min.js` file in the `dist/` folder whenever anything in `src/` is changed
     * It also copies the generated `metrics-vis.min.js` file to the `example/` folder so that the page receives all new changes
-
+ 4. To run tests, use `npm test` (implemented with the Jest testing framework)

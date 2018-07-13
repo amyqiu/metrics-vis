@@ -6,6 +6,8 @@ function GetPercentileIndex(percentile, array_length){
   let index = Math.ceil(array_length * (percentile / 100)) - 1;
   if (index == -1) {
     return 0;
+  } else if (index >= array_length){
+    return array_length - 1;
   }
   return index;
 }
