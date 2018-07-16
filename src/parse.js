@@ -74,7 +74,7 @@ function ParsePinpointData(raw_data){
 
   // Only use rows containg with-patch data (indicated by '+')
   let filtered_data = data.filter(function(item) {
-    return (item[display_label_index] && item[display_label_index].includes('+'));
+    return (item[display_label_index]) && item[display_label_index].includes('+'));
   });
 
   let processed_data = [];

@@ -50,8 +50,8 @@ function PlotData(first_time, height, width) {
   for(let i = 0; i < parse.TRACES.length; ++i){
     sliced_traces[i] = { x: [], y: [], name: parse.TRACES[i].name, type: 'bar', mode:'markers', hoverlabel: {namelength:-1}};
 
-    sliced_traces[i].x = parse.TRACES[i].x.slice(start_index, end_index);
-    sliced_traces[i].y = parse.TRACES[i].y.slice(start_index, end_index);
+    sliced_traces[i].x = parse.TRACES[i].x.slice(start_index, end_index + 1);
+    sliced_traces[i].y = parse.TRACES[i].y.slice(start_index, end_index + 1);
   }
 
   let plot;
