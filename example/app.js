@@ -8,7 +8,7 @@ function UploadFile(){
     let content = event.target.result;
     let csv = Papa.parse(content);
     if (csv) {
-      MetricsVis.CreatePlot('main', csv.data, GetDataSource(), window.innerHeight * 0.8, window.innerWidth * 0.8);
+      MetricsVis.init(document.getElementById('main'), csv.data, GetDataSource(), window.innerHeight * 0.8, window.innerWidth * 0.8);
     } else {
       alert('No data to import!');
     }
