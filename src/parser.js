@@ -1,157 +1,154 @@
 export default class Parser {
-  constructor(raw_data) {
-    this.raw_data = raw_data;
-    this.page_names = new Set(); // Set of page names for searching
-    this.processed_data = []; 
+  constructor(rawData) {
+    this.rawData = rawData;
+    this.pageNames = new Set(); // Set of page names for searching
+    this.processedData = []; 
     this.traces = []; // Stores data in Plotly format
   }
 
   // Used to sort data by total time taken
-  CompareTimes(a, b){
-    let a_value = a.data.reduce((x, y) => Number(x) + Number(y), 0);
-    let b_value = b.data.reduce((x, y) => Number(x) + Number(y), 0);
-    if (a_value === b_value) {
+  compareTimes(a, b){
+    let aValue = a.data.reduce((x, y) => Number(x) + Number(y), 0);
+    let bValue = b.data.reduce((x, y) => Number(x) + Number(y), 0);
+    if (aValue === bValue) {
         return 0;
     }
     else {
-        return (a_value < b_value) ? -1 : 1;
+        return (aValue < bValue) ? -1 : 1;
     }
   }
 
   // Converts string to number and rounds to two decimal places
-  GetRoundedNumber(string){
+  getRoundedNumber(string){
     return Number(Number(string).toFixed(2));
   }
 
   // Parses Cluster Telemetry data
-  ParseCTData(){
-    let trace_names = [
+  parseCTData(){
+    let traceNames = [
       'Thread Renderer Compositor Time',
       'Thread Total Fast Path Time',
       'Thread Total All CPU Time'
     ];
 
-    let headers = this.raw_data[0];
-    let data = this.raw_data.slice(1,-1);
+    let headers = this.rawData[0];
+    let data = this.rawData.slice(1,-1);
 
-    let thread_renderer_index = headers.indexOf('thread_renderer_main_cpu_time_per_frame (ms)');
-    let frame_times_index = headers.indexOf('frame_times (ms)');
-    let thread_total_fast_index = headers.indexOf('thread_total_fast_path_cpu_time_per_frame (ms)');
-    let thread_total_all_index = headers.indexOf('thread_total_all_cpu_time_per_frame (ms)');
-    let page_name_index = headers.indexOf('page_name');
+    let threadRendererIndex = headers.indexOf('thread_renderer_main_cpu_time_per_frame (ms)');
+    let frameTimesIndex = headers.indexOf('frame_times (ms)');
+    let threadTotalFastIndex = headers.indexOf('thread_total_fast_path_cpu_time_per_frame (ms)');
+    let threadTotalAllIndex = headers.indexOf('thread_total_all_cpu_time_per_frame (ms)');
+    let pageNameIndex = headers.indexOf('page_name');
 
     // Remove rows where any of the data is missing
-    let filtered_data = data.filter(function(item) {
-      return (item[thread_renderer_index] != '' && item[thread_total_fast_index] != '' 
-        && item[thread_total_all_index] != '' && item[frame_times_index] != '');
+    let filteredData = data.filter(function(item) {
+      return (item[threadRendererIndex] != '' && item[threadTotalFastIndex] != '' 
+        && item[threadTotalAllIndex] != '' && item[frameTimesIndex] != '');
     });
 
-    // Populate processed_data with objects containing the page and data points
-    for (let i = 0; i < filtered_data.length; ++i) {
-      let thread_renderer = this.GetRoundedNumber(filtered_data[i][thread_renderer_index]);
-      let thread_total_fast = this.GetRoundedNumber(filtered_data[i][thread_total_fast_index]);
-      let thread_total_all = this.GetRoundedNumber(filtered_data[i][thread_total_all_index]);
+    // Populate processedData with objects containing the page and data points
+    for (let i = 0; i < filteredData.length; ++i) {
+      let threadRenderer = this.getRoundedNumber(filteredData[i][threadRendererIndex]);
+      let threadTotalFast = this.getRoundedNumber(filteredData[i][threadTotalFastIndex]);
+      let threadTotalAll = this.getRoundedNumber(filteredData[i][threadTotalAllIndex]);
 
-      let new_site = {
-        page_name: filtered_data[i][page_name_index],
-        data: [thread_renderer, thread_total_fast, thread_total_all]
+      let newSite = {
+        pageName: filteredData[i][pageNameIndex],
+        data: [threadRenderer, threadTotalFast, threadTotalAll]
       };
-      this.processed_data.push(new_site);
+      this.processedData.push(newSite);
     }
 
-    this.FillTraces(trace_names);
+    this.fillTraces(traceNames);
   }
 
   // Parses Pinpoint data
-  ParsePinpointData(){
+  parsePinpointData(){
     // Add more metrics here if needed
-    let trace_names = ['frame_times', 'mean_frame_time', 'mean_input_event_latency'];
-    let trace_names_1 = ['frame_time_discrepancy', 'first_gesture_scroll_update_latency'];
-    let trace_names_2 = ['queueing_durations', 'input_event_latency', 'main_thread_scroll_latency'];
-    let trace_names_3 = ['mean_main_thread_scroll_latency', 'percentage_smooth'];
+    let traceNames = ['frame_times', 'mean_frame_time', 'mean_input_event_latency'];
+    let traceNames1 = ['frame_time_discrepancy', 'first_gesture_scroll_update_latency'];
+    let traceNames2 = ['queueing_durations', 'input_event_latency', 'main_thread_scroll_latency'];
+    let traceNames3 = ['mean_main_thread_scroll_latency', 'percentage_smooth'];
 
-    let headers = this.raw_data[0];
-    let data = this.raw_data.slice(1,-1);
+    let headers = this.rawData[0];
+    let data = this.rawData.slice(1,-1);
 
-    let display_label_index = headers.indexOf('displayLabel');
-    let name_index = headers.indexOf('name');
-    let page_name_index = headers.indexOf('stories');
-    let value_index = headers.indexOf('avg');
+    let displayLabelIndex = headers.indexOf('displayLabel');
+    let nameIndex = headers.indexOf('name');
+    let pageNameIndex = headers.indexOf('stories');
+    let valueIndex = headers.indexOf('avg');
 
     // Only use rows containg with-patch data (indicated by '+')
-    let filtered_data = data.filter(function(item) {
-      let name = item[name_index];
-      return (trace_names.indexOf(name) >= 0 || trace_names_1.indexOf(name) >= 0 ||
-        trace_names_2.indexOf(name) >= 0 || trace_names_3.indexOf(name) >= 0); 
-      //return (item[display_label_index] && item[display_label_index].includes('+'));
+    let filteredData = data.filter(function(item) {
+      let name = item[nameIndex];
+      return (traceNames.indexOf(name) >= 0 || traceNames1.indexOf(name) >= 0 ||
+        traceNames2.indexOf(name) >= 0 || traceNames3.indexOf(name) >= 0); 
+      //return (item[displayLabelIndex] && item[displayLabelIndex].includes('+'));
     });
 
-    for (let i = 0; i < filtered_data.length; i++){
-      this.AddData(filtered_data[i], name_index, page_name_index, value_index);
+    for (let i = 0; i < filteredData.length; i++){
+      this.addData(filteredData[i], nameIndex, pageNameIndex, valueIndex);
     }
 
-    console.log("processed_data");
-    console.log(this.processed_data);
-
-    this.FillTraces(trace_names);
+    this.fillTraces(traceNames);
   }
 
-  AddData(row, name_index, page_name_index, value_index){
-    let trace_names = ['frame_times', 'mean_frame_time', 'mean_input_event_latency'];
-    let trace_names_1 = ['frame_time_discrepancy', 'first_gesture_scroll_update_latency'];
-    let trace_names_2 = ['queueing_durations', 'input_event_latency', 'main_thread_scroll_latency'];
-    let trace_names_3 = ['mean_main_thread_scroll_latency', 'percentage_smooth'];
+  addData(row, nameIndex, pageNameIndex, valueIndex){
+    let traceNames = ['frame_times', 'mean_frame_time', 'mean_input_event_latency'];
+    let traceNames1 = ['frame_time_discrepancy', 'first_gesture_scroll_update_latency'];
+    let traceNames2 = ['queueing_durations', 'input_event_latency', 'main_thread_scroll_latency'];
+    let traceNames3 = ['mean_main_thread_scroll_latency', 'percentage_smooth'];
 
-    let data_name = row[name_index];
-    let main_data_index = trace_names.indexOf(data_name);
-    let data_1_index = trace_names_1.indexOf(data_name);
-    let data_2_index = trace_names_2.indexOf(data_name);
-    let data_3_index = trace_names_3.indexOf(data_name);
+    let dataName = row[nameIndex];
+    let mainDataIndex = traceNames.indexOf(dataName);
+    let dataIndex1 = traceNames1.indexOf(dataName);
+    let dataIndex2 = traceNames2.indexOf(dataName);
+    let dataIndex3 = traceNames3.indexOf(dataName);
 
-    let page_name = row[page_name_index];
+    let pageName = row[pageNameIndex];
 
-    let existing_site = this.processed_data.find(x => x.page_name === page_name);
+    let existing_site = this.processedData.find(x => x.pageName === pageName);
     let site;
 
     if (existing_site == null){
       site = {
-        page_name: page_name,
-        data: Array.apply(null, Array(trace_names.length)).map(Number.prototype.valueOf,0),
-        data_1: Array.apply(null, Array(trace_names_1.length)).map(Number.prototype.valueOf,0),
-        data_2: Array.apply(null, Array(trace_names_2.length)).map(Number.prototype.valueOf,0),
-        data_3: Array.apply(null, Array(trace_names_3.length)).map(Number.prototype.valueOf,0)
+        pageName: pageName,
+        data: Array.apply(null, Array(traceNames.length)).map(Number.prototype.valueOf,0),
+        data1: Array.apply(null, Array(traceNames1.length)).map(Number.prototype.valueOf,0),
+        data2: Array.apply(null, Array(traceNames2.length)).map(Number.prototype.valueOf,0),
+        data3: Array.apply(null, Array(traceNames3.length)).map(Number.prototype.valueOf,0)
       };
     } else {
       site = existing_site;
     }
 
-    let value = this.GetRoundedNumber(row[value_index]);
+    let value = this.getRoundedNumber(row[valueIndex]);
 
-    if (main_data_index >= 0){
-      site.data[main_data_index] = value; 
-    } else if(data_1_index >= 0){
-      site.data_1[data_1_index] = value;
-    } else if(data_2_index >= 0){
-      site.data_2[data_2_index] = value;
-    } else if(data_3_index >= 0){
-      site.data_3[data_3_index] = value;
+    if (mainDataIndex >= 0){
+      site.data[mainDataIndex] = value; 
+    } else if(dataIndex1 >= 0){
+      site.data1[dataIndex1] = value;
+    } else if(dataIndex2 >= 0){
+      site.data2[dataIndex2] = value;
+    } else if(dataIndex3 >= 0){
+      site.data3[dataIndex3] = value;
     }
 
     if (existing_site == null){
-      this.processed_data.push(site);
+      this.processedData.push(site);
     }
   }
 
   // Given processed data from CT or Pinpoint, convert to Plotly trace format
-  FillTraces(trace_names){
-    let sorted_data = this.processed_data.sort(this.CompareTimes);
+  fillTraces(traceNames){
+    let sortedData = this.processedData.sort(this.compareTimes);
 
-    for (let i = 0; i < trace_names.length; ++i) {
-      this.traces[i] = { x: [], y: [], name: trace_names[i], type: 'bar', mode:'markers', hoverlabel: {namelength:-1}};
-      for (let r = 0; r < sorted_data.length; ++r) {
-        this.traces[i].x[r] = sorted_data[r].page_name;
-        this.traces[i].y[r] = sorted_data[r].data[i];
-        this.page_names.add(sorted_data[r].page_name);
+    for (let i = 0; i < traceNames.length; ++i) {
+      this.traces[i] = { x: [], y: [], name: traceNames[i], type: 'bar', mode:'markers', hoverlabel: {namelength:-1}};
+      for (let r = 0; r < sortedData.length; ++r) {
+        this.traces[i].x[r] = sortedData[r].pageName;
+        this.traces[i].y[r] = sortedData[r].data[i];
+        this.pageNames.add(sortedData[r].pageName);
       }
     }
   }

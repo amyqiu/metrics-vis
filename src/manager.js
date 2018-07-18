@@ -7,18 +7,19 @@ import Storage from './storage.js';
 let $script = require('scriptjs');
 
 export default class Manager {
-  constructor(div, data, data_source, plot_height, plot_width, callback) {
+  constructor(div, data, dataSource, plotHeight, plotWidth) {
     this.div = div;
     this.data = data;
-    this.data_source = data_source;
-    this.plot_height = plot_height;
-    this.plot_width = plot_width;
+    this.dataSource = dataSource;
+    this.plotHeight = plotHeight;
+    this.plotWidth = plotWidth;
 
     this.parser = new Parser(this.data);
     this.spin = new Spin(this.div);
     this.storage = new Storage();
+    this.plot = null;
 
-    this.storage.StoreDataSource(this.data_source);
+    this.storage.storeDataSource(this.dataSource);
 
     this.scripts = [
       'https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js',
@@ -33,7 +34,7 @@ export default class Manager {
       '    <span class="button" id="submit">Submit</span>' +
       '    <input type="text" id="page" placeholder="Page Name">' +
       '    <span class="button green" id="submit-page">Detailed Plot</span>' +
-      '    <p id="error_page"></p>' +
+      '    <p id="error-page"></p>' +
       '  </div>' +
       '  <div>' +
       '    <div id="spinner">' +
@@ -46,59 +47,51 @@ export default class Manager {
     this.div.innerHTML += this.template;
 
     $script(this.scripts, ()=>{
-      this.CreatePlot();
+      this.createPlot(this.data, this.dataSource);
     });
-
   }
 
-  CreatePlot(){
-    this.spin.Start();
-
-    // Parse data based on its data_source (formats are different)
-    let parser = new Parser(this.data);
-    if (this.data_source == "CT"){
-      parser.ParseCTData(this.data);
+  createPlot(data, dataSource){
+    // Parse data based on its dataSource (formats are different)
+    let parser = new Parser(data);
+    if (dataSource == "CT"){
+      parser.parseCTData(data);
     } else{
-      parser.ParsePinpointData(this.data);
+      parser.parsePinpointData(data);
     }
 
     // Create new Plotly plot
-    let plot = new Plot(this.div, parser.page_names, parser.processed_data, 
-      parser.traces, this.plot_height, this.plot_width);
-    plot.Draw();
+    this.plot = new Plot(this.div, parser.pageNames, parser.processedData, 
+      parser.traces, this.plotHeight, this.plotWidth);
+    this.plot.draw();
 
-    let search = new Search(this.div, parser.page_names, parser.processed_data);
-    this.InitializeElements(search);
-
-    this.spin.Stop();
+    let search = new Search(this.div, parser.pageNames, parser.processedData);
+    this.initializeElements(search);
   }
 
-  FilterByPercentile(){
-    this.spin.Start();
-
+  filterByPercentile(){
     // Add slight delay to allow loading animation to start
-    setTimeout(function(){
-      this.plot.Draw(false);
-    }, 5);
-
-    this.spin.Stop();
+    setTimeout(()=>{
+      this.plot.draw();
+    }, 10);
   }
 
-  InitializeElements(search){
-    // Initialize button onclicks
-    this.div.querySelector('#submit').addEventListener('click', this.FilterByPercentile);
-
-    // Associate textbox enter key presses with buttons
-    this.div.querySelector('#end').addEventListener('keyup', function(e){
+  initializeElements(search){
+    this.div.querySelector('#submit').addEventListener('click', ()=>{
+      this.filterByPercentile();
+    });
+    this.div.querySelector('#end').addEventListener('keyup', (e)=>{
       if(e.keyCode==13){
-        FilterByPercentile();
+        this.filterByPercentile();
       }
     });
 
-    this.div.querySelector('#submit-page').addEventListener('click', search.SearchForPage);
-    this.div.querySelector('#page').addEventListener('keyup', function(e){
+    this.div.querySelector('#submit-page').addEventListener('click', ()=>{
+      search.searchForPage();
+    });
+    this.div.querySelector('#page').addEventListener('keyup', (e)=>{
       if(e.keyCode==13){
-        search.SearchForPage();
+        search.searchForPage();
       }
     });        
   }

@@ -6,55 +6,55 @@ export default class DetailedPlot {
     this.storage = new Storage();
 
     // Update if new CT metrics added
-    this.ct_trace_names = [
+    this.ctTraceNames = [
       'Thread<br> Renderer Time',
       'Thread Total<br> Fast Path Time',
       'Thread Total<br> All CPU Time'
     ];
 
-    this.pinpoint_trace_names_1 = [
+    this.pinpointTraceNames1 = [
       'Frame<br> Time Discrepancy',
       'First Gesture<br> Scroll Update<br> Latency'
     ]
 
-    this.pinpoint_trace_names_2 = [
+    this.pinpointTraceNames2 = [
       'Queueing<br> Durations', 
       'Input<br> Event Latency',
       'Main Thread<br> Scroll Latency'
     ]
 
-    this.pinpoint_trace_names_3 = [
+    this.pinpointTraceNames3 = [
       'Mean Main<br> Thread Scroll<br> Latency',
       'Percentage Smooth'
     ]
 
-    this.pinpoint_colors_1 = [
+    this.pinpointColors1 = [
       'rgba(1,1,1,0.0)',
       '#2281c4',
       '#13486d'
     ]
 
-    this.pinpoint_colors_2 = [
+    this.pinpointColors2 = [
       'rgba(1,1,1,0.0)',
       '#e66c00',
+      '#b35400',
       '#803c00'
     ]
 
-    this.pinpoint_colors_3 = [
+    this.pinpointColors3 = [
       'rgba(1,1,1,0.0)',
       '#32b432',
-      '#278c27',
       '#1c641c'
     ]
 
-    this.pinpoint_colors = [
+    this.pinpointColors = [
       'rgba(1,1,1,0.0)',
       '#2281c4',
       '#13486d',
       '#e66c00',
+      '#b35400',
       '#803c00',  
       '#32b432',
-      '#278c27',
       '#1c641c'      
     ]
 
@@ -74,46 +74,49 @@ export default class DetailedPlot {
     ];
   }
 
-  Draw(doc){
+  draw(doc){
     // Load correct trace names based on data source
-    let data_source = this.storage.RetrieveDataSource();
-    let stored_data = this.storage.RetrieveDataPoint();
-    let point = stored_data.point;
+    let dataSource = this.storage.retrieveDataSource();
+    let storedData = this.storage.retrieveDataPoint();
+    let point = storedData.point;
 
     let data;
-    let trace_names;
+    let traceNames;
     let colors;
-    switch(stored_data.sub_category){
-      case 'frame_times':
-        data = point.data_1;
-        trace_names = this.pinpoint_trace_names_1;
-        colors = this.pinpoint_colors_1;
-        break;
-      case 'mean_frame_time':
-        data = point.data_2;
-        trace_names = this.pinpoint_trace_names_2;
-        colors = this.pinpoint_colors_2;
-        break;
-      case 'mean_input_event_latency':
-        data = point.data_3;
-        trace_names = this.pinpoint_trace_names_3;
-        colors = this.pinpoint_colors_3;
-        break
-      default:
-        data = point.data_1.concat(point.data_2, point.data_3);
-        trace_names = this.pinpoint_trace_names_1.concat(
-          this.pinpoint_trace_names_2, this.pinpoint_trace_names_3);
-        colors = this.pinpoint_colors;
-    }
 
-    if (data_source == 'CT'){
-      trace_names = this.ct_trace_names;
+
+    if (dataSource == 'CT'){
+      data = point.data;
+      traceNames = this.ctTraceNames;
       colors = this.colors;
+    } else {
+      switch(storedData.subCategory){
+        case 'frame_times':
+          data = point.data1;
+          traceNames = this.pinpointTraceNames1;
+          colors = this.pinpointColors1;
+          break;
+        case 'mean_frame_time':
+          data = point.data2;
+          traceNames = this.pinpointTraceNames2;
+          colors = this.pinpointColors2;
+          break;
+        case 'mean_input_event_latency':
+          data = point.data3;
+          traceNames = this.pinpointTraceNames3;
+          colors = this.pinpointColors3;
+          break
+        default:
+          data = point.data1.concat(point.data2, point.data3);
+          traceNames = this.pinpointTraceNames1.concat(
+            this.pinpointTraceNames2, this.pinpointTraceNames3);
+          colors = this.pinpointColors;
+      }      
     }
 
     let base = [0];
     let values = [];
-    let hover_texts = [];
+    let hoverTexts = [];
     let sum = 0;
 
     // Create values for 'waterfall' chart
@@ -123,13 +126,13 @@ export default class DetailedPlot {
         base[i] = sum;
       }
 
-      let curr_values = new Array(data.length).fill(0);
-      curr_values[i] = data[i];
-      values.push(curr_values);
+      let currValues = new Array(data.length).fill(0);
+      currValues[i] = data[i];
+      values.push(currValues);
 
-      let hover_text = new Array(data.length).fill('');
-      hover_text[i] = data[i] + ' s';
-      hover_texts.push(hover_text);
+      let hoverText = new Array(data.length).fill('');
+      hoverText[i] = data[i] + ' s';
+      hoverTexts.push(hoverText);
 
       sum += data[i];
     }
@@ -143,7 +146,7 @@ export default class DetailedPlot {
     // Convert to Plotly data format
     for (let i = 0; i < values.length; ++i){
       let trace = {
-        y: trace_names,
+        y: traceNames,
         x: values[i],
         type: 'bar',
         orientation: 'h',
@@ -156,18 +159,18 @@ export default class DetailedPlot {
         trace.hoverinfo = 'none';
       } else {
         trace.hoverinfo = 'text';
-        trace.hovertext = hover_texts[i-1];
+        trace.hovertext = hoverTexts[i-1];
       }
 
       traces.push(trace);
     }
 
-    let sub_title = stored_data.sub_category ? stored_data.sub_category : 'All';
+    let subtitle = storedData.subCategory ? storedData.subCategory : 'All';
 
     let layout = {
       xaxis: {title: 'Time (s)'},
       yaxis: {tickfont:{size:12}, automargin: true},
-      title: point.page_name + ': ' +  sub_title,
+      title: point.pageName + ': ' +  subtitle,
       barmode: 'stack',
       width: window.innerWidth * 0.6,
       height: window.innerWidth * 0.4,
@@ -183,21 +186,21 @@ export default class DetailedPlot {
     };
 
     let div = doc.createElement('div');
-    div.id = 'detailed_plot';
+    div.id = 'detailed-plot';
     Plotly.newPlot(div, traces, layout);
     doc.getElementById('plots').appendChild(div);
   }
 
-  Open(){
-    let point = this.storage.RetrieveDataPoint();
+  open(){
+    let data = this.storage.retrieveDataPoint();
     var win = window.open("", Math.random());
-    win.document.title = point.page;
+    win.document.title = data.point.pageName;
 
     let script = win.document.createElement('script');
     script.setAttribute('src', 'https://cdn.plot.ly/plotly-latest.min.js');
     script.async = false;
     script.addEventListener('load', ()=>{
-      this.Draw(win.document);
+      this.draw(win.document);
     });
     win.document.head.insertBefore(script, win.document.head.firstChild);
 

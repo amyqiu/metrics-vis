@@ -2,12 +2,12 @@ import DetailedPlot from './detailed-plot.js';
 import Storage from './storage.js';
 
 export default class Search{
-  constructor(div, page_names, processed_data) {
+  constructor(div, pageNames, processedData) {
     this.div = div;
-    this.page_names = page_names;
-    this.processed_data = processed_data;
+    this.pageNames = pageNames;
+    this.processedData = processedData;
     this.storage = new Storage();
-    this.detailed_plot = new DetailedPlot();
+    this.detailedPlot = new DetailedPlot();
 
     const options = {
       shouldSort: true,
@@ -19,16 +19,16 @@ export default class Search{
       maxPatternLength: 32,
       minMatchCharLength: 1,
     };
-    this.fuse = new Fuse(Array.from(this.page_names), options);
+    this.fuse = new Fuse(Array.from(this.pageNames), options);
   }
 
   // Called when user searches for a single page
   // Generates detailed plot (horizontal bar chart) in new tab
-  SearchForPage(){
+  searchForPage(){
     let page = this.div.querySelector('#page').value;
     let result = this.fuse.search(page);
 
-    let error = this.div.querySelector('#error_page');
+    let error = this.div.querySelector('#error-page');
     if (result.length < 1){
       error.innerHTML = 'Could not find that page!'
       return;
@@ -37,10 +37,10 @@ export default class Search{
 
     // Store data for closest match to use for detailed plot
     let index = result[0].item;
-    let info = this.processed_data[index];
+    let info = this.processedData[index];
 
-    this.storage.StoreDataPoint(info);
+    this.storage.storeDataPoint(info);
     
-    this.detailed_plot.Open();
+    this.detailedPlot.open();
   }
 }

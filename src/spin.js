@@ -4,8 +4,8 @@ export default class Spin {
   }
 
   // Show spinner animation
-  Start(){
-    this.Stop(); //make sure existing spinners are removed
+  start(){
+    this.stop(); //make sure existing spinners are removed
     const opts = {
       lines: 13,
       length: 25,
@@ -21,18 +21,17 @@ export default class Spin {
       direction: 1,
       zIndex: 2e9, 
       className: 'spinner',
-      top: '20%',
-      left: '20%',
+      top: '50%',
+      left: '40%',
       shadow: '0 0 2px transparent',
-      //position: 'absolute'
     };
     let target = this.div.querySelector('#spinner');
-    let spinner = new Spinner(opts).spin();
-    target.appendChild(spinner.el);
+    let spinner = new Spinner(opts).spin(target);
+    console.log("started");
   }
 
   // Remove spinner animation
-  Stop(){
+  stop(){
     this.div.querySelector('#spinner').innerHTML = '';
   }
 }
