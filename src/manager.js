@@ -1,7 +1,6 @@
 import Parser from './parser.js';
 import Plot from './plot.js';
 import Search from './search.js';
-import Spin from './spin.js'
 import Storage from './storage.js';
 
 let $script = require('scriptjs');
@@ -15,14 +14,12 @@ export default class Manager {
     this.plotWidth = plotWidth;
 
     this.parser = new Parser(this.data);
-    this.spin = new Spin(this.div);
     this.storage = new Storage();
     this.plot = null;
 
     this.storage.storeDataSource(this.dataSource);
 
     this.scripts = [
-      'https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js',
       'https://cdn.plot.ly/plotly-latest.min.js',
       'https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.0.4/fuse.min.js'
     ];
@@ -37,8 +34,6 @@ export default class Manager {
       '    <p id="error-page"></p>' +
       '  </div>' +
       '  <div>' +
-      '    <div id="spinner">' +
-      '    </div>' +
       '    <div id="plots">' +
       '    </div>' +
       '  </div>' +
