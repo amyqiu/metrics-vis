@@ -4,15 +4,20 @@ This project explores ways to visualize Chrome metrics, specifically the duratio
 
 ## Using the library
 
-1. Download the `metrics-vis.min.js` file from the `/dist` folder
+1. Download the `metrics-visualizer.min.js` file from the `/dist` folder
 2. Include this in the header of your html file
    * Note: MetricsVis includes the following dependencies: plotly.js (plotting library), spin.js (UI spinner), fuse.js (search library)
-   * You will not need to include any of these in your html file, since they are bundled into `metrics-vis.min.js`
-3. In your script, Call `MetricsVis.CreatePlot(div_id, file, data_source, plot_height, plot_width);`
+   * You will not need to include any of these in your html file, since they are bundled into `metrics-visualizer.min.js`
+3. In your script, use
+    ```
+    var metricsVisualizer = new MetricsVisualizer(div_id, file, data_source, plot_height, plot_width);
+    metricsVisualizer.createPlot();
+    ```
    * `div_id`: ID of the div that the plot should be inserted into
    * `data`: JS 2D array containing Cluster Telemetry or Pinpoint data
    * `data_source`: either 'CT' for Cluster Telemetry or 'PP' for Pinpoint
    * `plot_height`/`plot_width`: dimensions of Plotly plot (in px)
+4. 
 
 ## Using the tool
 
@@ -29,6 +34,6 @@ This project explores ways to visualize Chrome metrics, specifically the duratio
  1. Clone this repo
  2. Run `npm install`
  3. Run `npm start` and open the link provided to see a demo (opens `example/index.html`)
-    * This starts Webpack Dev Server, which will generate a minified `metrics-vis.min.js` file in the `dist/` folder whenever anything in `src/` is changed
-    * It also copies the generated `metrics-vis.min.js` file to the `example/` folder so that the page receives all new changes
+    * This starts Webpack Dev Server, which will generate a minified `metrics-visualizer.min.js` file in the `dist/` folder whenever anything in `src/` is changed
+    * It also copies the generated `metrics-visualizer.min.js` file to the `example/` folder so that the page receives all new changes
  4. To run tests, use `npm test` (implemented with the Jest testing framework)
