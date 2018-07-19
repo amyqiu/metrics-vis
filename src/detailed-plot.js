@@ -84,7 +84,7 @@ export default class DetailedPlot {
     let traceNames;
     let colors;
 
-
+    // Show breakdown if sub category was selected
     if (dataSource == 'CT'){
       data = page.data;
       traceNames = this.ctTraceNames;
@@ -152,7 +152,7 @@ export default class DetailedPlot {
         orientation: 'h',
         marker: {
           color: colors[i]
-        },
+        }
       };
 
       if (i == 0){
@@ -165,6 +165,17 @@ export default class DetailedPlot {
       traces.push(trace);
     }
 
+    let annotation = {
+      xref: 'paper',
+      yref: 'paper',
+      x: 1,
+      xanchor: 'left',
+      y: 1,
+      yanchor: 'bottom',
+      text: 'Total time: ' + sum.toFixed(2),
+      showarrow: false
+    };
+
     let subtitle = storedData.subCategory ? storedData.subCategory : 'All';
 
     let layout = {
@@ -172,17 +183,18 @@ export default class DetailedPlot {
       yaxis: {tickfont:{size:12}, automargin: true},
       title: page.pageName + ': ' +  subtitle,
       barmode: 'stack',
-      width: window.innerWidth * 0.6,
-      height: window.innerWidth * 0.4,
+      width: 900,
+      height: 600,
       autosize: false,
       showlegend: false,
       margin: {
         l: 150,
-        r: 100,
+        r: 150,
         b: 100,
         t: 100,
         pad: 5
       },
+      annotations: [annotation]
     };
 
     let div = doc.createElement('div');

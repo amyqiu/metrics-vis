@@ -2,7 +2,8 @@ export default class Parser {
   constructor(rawData) {
     this.rawData = rawData;
     this.pageNames = new Set(); // Set of page names for searching
-    this.processedData = []; 
+    this.processedData = [];
+    this.totals = []; 
     this.traces = []; // Stores data in Plotly format
     // Replace these trace names with actual metrics
     this.ctTraceNames = [
@@ -88,6 +89,11 @@ export default class Parser {
       this.addData(filteredData[i], nameIndex, pageNameIndex, valueIndex);
     }
 
+    for (let data of this.processedData){
+      let total = data.data[0] + data.data[1] + data.data[2];
+      this.totals.push(this.getRoundedNumber(total));
+    }
+
     this.fillTraces(this.ppTraceNames);
   }
 
@@ -137,11 +143,15 @@ export default class Parser {
     let sortedData = this.processedData.sort(this.compareTimes);
 
     for (let i = 0; i < traceNames.length; ++i) {
-      this.traces[i] = { x: [], y: [], name: traceNames[i], type: 'bar', mode:'markers', hoverlabel: {namelength:-1}};
+      this.traces[i] = { x: [], y: [], name: traceNames[i], type: 'bar', mode:'markers+text', 
+        hoverlabel: {namelength:-1}, textposition: 'outside'};
       for (let r = 0; r < sortedData.length; ++r) {
         this.traces[i].x[r] = sortedData[r].pageName;
         this.traces[i].y[r] = sortedData[r].data[i];
         this.pageNames.add(sortedData[r].pageName);
+      }
+      if (i === (traceNames.length - 1)){
+        this.traces[i].text = this.totals;
       }
     }
   }
