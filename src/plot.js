@@ -105,25 +105,26 @@ export default class Plot {
 
   // Create annotations for Plotly that show when a bar is clicked
   initializeAnnotations(plotDiv){
-    plotDiv.on('plotly_click', (data)=> {
+    plotDiv.on('plotly_click', (click)=> {
       this.removeAnnotations(); // Clear any previous annotation
 
-      let point = data.points[0];
-      let info = this.processedData.find(x => x.pageName === point.x);
+      let point = click.points[0];
+      let page = this.processedData.find(x => x.pageName === point.x);
 
       // Save the point so detailed plot can be generated
-      this.storage.storeDataPoint(info, point.data.name);
+      this.storage.storeData(page, point.data.name);
 
+      // Find correct location on stacked par to put annotation
       let yLocation;
       switch(point.data.name){
         case 'frame_times':
-          yLocation = info.data[0];
+          yLocation = page.data[0];
           break;
         case 'mean_frame_time':
-          yLocation = info.data[0] + info.data[1];
+          yLocation = page.data[0] + page.data[1];
           break;
         default:
-          yLocation = info.data[0] + info.data[1] + info.data[2];
+          yLocation = page.data[0] + page.data[1] + page.data[2];
       }
 
       let newAnnotation = {
@@ -144,6 +145,7 @@ export default class Plot {
 
       Plotly.relayout('plot', 'annotations[' + newIndex + ']', newAnnotation);
     });
+
     let detailedPlot = new DetailedPlot();
     plotDiv.on('plotly_clickannotation', () => {
       detailedPlot.open();

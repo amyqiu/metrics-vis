@@ -39,7 +39,7 @@ export default class Search{
     let index = result[0].item;
     let info = this.processedData[index];
 
-    this.storage.storeDataPoint(info);
+    this.storage.storeData(info);
     
     this.detailedPlot.open();
   }

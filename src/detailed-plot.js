@@ -77,8 +77,8 @@ export default class DetailedPlot {
   draw(doc){
     // Load correct trace names based on data source
     let dataSource = this.storage.retrieveDataSource();
-    let storedData = this.storage.retrieveDataPoint();
-    let point = storedData.point;
+    let storedData = this.storage.retrieveData();
+    let page = storedData.page;
 
     let data;
     let traceNames;
@@ -86,28 +86,28 @@ export default class DetailedPlot {
 
 
     if (dataSource == 'CT'){
-      data = point.data;
+      data = page.data;
       traceNames = this.ctTraceNames;
       colors = this.colors;
     } else {
       switch(storedData.subCategory){
         case 'frame_times':
-          data = point.data1;
+          data = page.data1;
           traceNames = this.pinpointTraceNames1;
           colors = this.pinpointColors1;
           break;
         case 'mean_frame_time':
-          data = point.data2;
+          data = page.data2;
           traceNames = this.pinpointTraceNames2;
           colors = this.pinpointColors2;
           break;
         case 'mean_input_event_latency':
-          data = point.data3;
+          data = page.data3;
           traceNames = this.pinpointTraceNames3;
           colors = this.pinpointColors3;
           break
         default:
-          data = point.data1.concat(point.data2, point.data3);
+          data = page.data1.concat(page.data2, page.data3);
           traceNames = this.pinpointTraceNames1.concat(
             this.pinpointTraceNames2, this.pinpointTraceNames3);
           colors = this.pinpointColors;
@@ -170,7 +170,7 @@ export default class DetailedPlot {
     let layout = {
       xaxis: {title: 'Time (s)'},
       yaxis: {tickfont:{size:12}, automargin: true},
-      title: point.pageName + ': ' +  subtitle,
+      title: page.pageName + ': ' +  subtitle,
       barmode: 'stack',
       width: window.innerWidth * 0.6,
       height: window.innerWidth * 0.4,
@@ -192,9 +192,9 @@ export default class DetailedPlot {
   }
 
   open(){
-    let data = this.storage.retrieveDataPoint();
+    let data = this.storage.retrieveData();
     var win = window.open("", Math.random());
-    win.document.title = data.point.pageName;
+    win.document.title = data.page.pageName;
 
     let script = win.document.createElement('script');
     script.setAttribute('src', 'https://cdn.plot.ly/plotly-latest.min.js');

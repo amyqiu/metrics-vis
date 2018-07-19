@@ -4,12 +4,12 @@ export default class Storage {
 
   // Store data for a single page in session storage
   // Allows tab containing detailed plot to get values
-  storeDataPoint(point, subCategory){
-    let item = {
-      point: point,
+  storeData(page, subCategory){
+    let data = {
+      page: page,
       subCategory: subCategory
     };
-    sessionStorage.setItem('dataPoint', JSON.stringify(item));
+    sessionStorage.setItem('data', JSON.stringify(data));
   }
 
   // Store data source, either CT or PP
@@ -18,8 +18,8 @@ export default class Storage {
   }
 
   // Get previously stored data for a single page
-  retrieveDataPoint(){
-    return JSON.parse(sessionStorage.getItem('dataPoint'));
+  retrieveData(){
+    return JSON.parse(sessionStorage.getItem('data'));
   }
 
   // Get previously stored data source, either CT or PP
