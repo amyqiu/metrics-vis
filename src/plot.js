@@ -70,12 +70,12 @@ export default class Plot {
     // Only plot the filtered values (based on percentile indices)
     for(let i = 0; i < this.traces.length; ++i){
       slicedTraces[i] = { x: [], y: [], name: this.traces[i].name, type: 'bar', 
-        mode:'markers+text', hoverlabel: {namelength:-1}, textposition: 'outside'};
+        mode:'markers', hoverlabel: {namelength:-1}};
 
       slicedTraces[i].x = this.traces[i].x.slice(startIndex, endIndex + 1);
       slicedTraces[i].y = this.traces[i].y.slice(startIndex, endIndex + 1);
 
-      slicedTraces[i].text = this.traces[i].text;
+      //slicedTraces[i].text = this.traces[i].text;
     }
 
     let plot;

@@ -173,6 +173,9 @@ export default class DetailedPlot {
       y: 1,
       yanchor: 'bottom',
       text: 'Total time: ' + sum.toFixed(2),
+      font: {
+        size: 14
+      },
       showarrow: false
     };
 

@@ -8,7 +8,7 @@ function UploadFile(){
     let content = event.target.result;
     if (content) {
       let visualizer = new MetricsVisualizer(document.getElementById('main'), content, GetDataSource(), 
-        window.innerHeight * 0.8, window.innerWidth * 0.8, true);
+        window.innerHeight * 0.8, window.innerWidth * 0.8);
       visualizer.createPlot();
     } else {
       alert('No data to import!');

@@ -39,8 +39,6 @@ export default class MetricsVisualizer {
       '    </div>' +
       '  </div>' +
       '</div>';
-
-    this.div.innerHTML = this.template;
   }
 
   createPlot(){
@@ -53,6 +51,8 @@ export default class MetricsVisualizer {
       } else{
         parser.parsePinpointData(csv);
       }
+
+      this.div.innerHTML = this.template;
 
       // Create new Plotly plot
       this.plot = new Plot(this.div, parser.pageNames, parser.processedData, 

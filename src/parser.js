@@ -143,16 +143,16 @@ export default class Parser {
     let sortedData = this.processedData.sort(this.compareTimes);
 
     for (let i = 0; i < traceNames.length; ++i) {
-      this.traces[i] = { x: [], y: [], name: traceNames[i], type: 'bar', mode:'markers+text', 
-        hoverlabel: {namelength:-1}, textposition: 'outside'};
+      this.traces[i] = { x: [], y: [], name: traceNames[i], type: 'bar', mode:'markers', 
+        hoverlabel: {namelength:-1}};
       for (let r = 0; r < sortedData.length; ++r) {
         this.traces[i].x[r] = sortedData[r].pageName;
         this.traces[i].y[r] = sortedData[r].data[i];
         this.pageNames.add(sortedData[r].pageName);
       }
-      if (i === (traceNames.length - 1)){
-        this.traces[i].text = this.totals;
-      }
+      // if (i === (traceNames.length - 1)){
+      //   this.traces[i].text = this.totals;
+      // }
     }
   }
 
