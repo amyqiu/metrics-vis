@@ -1,8 +1,8 @@
 {
-  "name": "metrics-vis",
+  "name": "metrics-visualizer",
   "version": "1.0.0",
   "description": "This project explores ways to visualize Chrome metrics, specifically the durations of various steps in the rendering pipeline.",
-  "main": "dist/metrics-vis.js",
+  "main": "dist/metrics-visualizer.min.js",
   "dependencies": {
     "webpack": "^4.16.0",
     "webpack-dev-server": "^3.1.4"
@@ -27,7 +27,7 @@
   },
   "scripts": {
     "test": "jest",
-    "build": "webpack --display-error-details && cp dist/metrics-vis.min.js example",
+    "build": "webpack --display-error-details && cp dist/metrics-visualizer.min.js example",
     "start": "webpack-dev-server --content-base example"
   },
   "jest": {

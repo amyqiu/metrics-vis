@@ -2,10 +2,11 @@ import Parser from './parser.js';
 import Plot from './plot.js';
 import Search from './search.js';
 import Storage from './storage.js';
+import './css/styles.css';
 
 let $script = require('scriptjs');
 
-export default class Manager {
+export default class MetricsVisualizer {
   constructor(div, data, dataSource, plotHeight, plotWidth) {
     this.div = div;
     this.data = data;
@@ -13,7 +14,6 @@ export default class Manager {
     this.plotHeight = plotHeight;
     this.plotWidth = plotWidth;
 
-    this.parser = new Parser(this.data);
     this.storage = new Storage();
     this.plot = null;
 
@@ -21,7 +21,8 @@ export default class Manager {
 
     this.scripts = [
       'https://cdn.plot.ly/plotly-latest.min.js',
-      'https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.0.4/fuse.min.js'
+      'https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.0.4/fuse.min.js',
+      'https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.5.0/papaparse.min.js'
     ];
 
     this.template = '<div class="metrics-vis">' +
@@ -39,29 +40,28 @@ export default class Manager {
       '  </div>' +
       '</div>';
 
-    this.div.innerHTML += this.template;
-
-    $script(this.scripts, ()=>{
-      this.createPlot(this.data, this.dataSource);
-    });
+    this.div.innerHTML = this.template;
   }
 
-  createPlot(data, dataSource){
-    // Parse data based on its dataSource (formats are different)
-    let parser = new Parser(data);
-    if (dataSource == "CT"){
-      parser.parseCTData(data);
-    } else{
-      parser.parsePinpointData(data);
-    }
+  createPlot(){
+    $script(this.scripts, ()=>{
+      // Parse data based on its dataSource (formats are different)
+      let csv = Papa.parse(this.data).data;
+      let parser = new Parser(csv);
+      if (this.dataSource == "CT"){
+        parser.parseCTData(csv);
+      } else{
+        parser.parsePinpointData(csv);
+      }
 
-    // Create new Plotly plot
-    this.plot = new Plot(this.div, parser.pageNames, parser.processedData, 
-      parser.traces, this.plotHeight, this.plotWidth);
-    this.plot.draw();
+      // Create new Plotly plot
+      this.plot = new Plot(this.div, parser.pageNames, parser.processedData, 
+        parser.traces, this.plotHeight, this.plotWidth);
+      this.plot.draw();
 
-    let search = new Search(this.div, parser.pageNames, parser.processedData);
-    this.initializeElements(search);
+      let search = new Search(this.div, parser.pageNames, parser.processedData);
+      this.initializeElements(search);
+    });
   }
 
   filterByPercentile(){

@@ -15,7 +15,7 @@ export default class Plot {
     this.layout = {
       title: 'Metrics Visualization',
       xaxis: {title: 'Websites',  showticklabels: false},
-      yaxis: {title: 'Seconds'},
+      yaxis: {title: 'Time'},
       barmode: 'stack',
       autosize: true,
       hovermode: 'closest'
@@ -109,23 +109,34 @@ export default class Plot {
       this.removeAnnotations(); // Clear any previous annotation
 
       let point = data.points[0];
-
       let info = this.processedData.find(x => x.pageName === point.x);
 
       // Save the point so detailed plot can be generated
       this.storage.storeDataPoint(info, point.data.name);
 
+      let yLocation;
+      switch(point.data.name){
+        case 'frame_times':
+          yLocation = info.data[0];
+          break;
+        case 'mean_frame_time':
+          yLocation = info.data[0] + info.data[1];
+          break;
+        default:
+          yLocation = info.data[0] + info.data[1] + info.data[2];
+      }
+
       let newAnnotation = {
-          x: point.xaxis.d2l(point.x),
-          y: point.yaxis.p2c(data.event.clientY-300),
-          ax: 0,
-          ay: -80,
-          bgcolor: 'rgba(255, 255, 255, 0.8)',
-          bordercolor: '#404040',
-          arrowcolor: '#404040 ',
-          borderpad: 10,
-          text: '<a rel="external">' + point.x + ': ' + point.data.name + '</a>',
-          captureevents: true
+        x: point.xaxis.d2l(point.x),
+        y: yLocation,
+        ax: 0,
+        ay: -80,
+        bgcolor: 'rgba(255, 255, 255, 0.8)',
+        bordercolor: '#404040',
+        arrowcolor: '#404040',
+        borderpad: 10,
+        text: '<a rel="external">' + point.x + ': ' + point.data.name + '</a>',
+        captureevents: true
       };
 
       let plot = this.div.querySelector('#plot');

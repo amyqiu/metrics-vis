@@ -4,6 +4,16 @@ export default class Parser {
     this.pageNames = new Set(); // Set of page names for searching
     this.processedData = []; 
     this.traces = []; // Stores data in Plotly format
+    // Replace these trace names with actual metrics
+    this.ctTraceNames = [
+      'Thread Renderer Compositor Time',
+      'Thread Total Fast Path Time',
+      'Thread Total All CPU Time'
+    ];
+    this.ppTraceNames = ['frame_times', 'mean_frame_time', 'mean_input_event_latency'];
+    this.ppTraceNames1 = ['frame_time_discrepancy', 'first_gesture_scroll_update_latency'];
+    this.ppTraceNames2 = ['queueing_durations', 'input_event_latency', 'main_thread_scroll_latency'];
+    this.ppTraceNames3 = ['mean_main_thread_scroll_latency', 'percentage_smooth'];
   }
 
   // Used to sort data by total time taken
@@ -25,12 +35,6 @@ export default class Parser {
 
   // Parses Cluster Telemetry data
   parseCTData(){
-    let traceNames = [
-      'Thread Renderer Compositor Time',
-      'Thread Total Fast Path Time',
-      'Thread Total All CPU Time'
-    ];
-
     let headers = this.rawData[0];
     let data = this.rawData.slice(1,-1);
 
@@ -41,7 +45,7 @@ export default class Parser {
     let pageNameIndex = headers.indexOf('page_name');
 
     // Remove rows where any of the data is missing
-    let filteredData = data.filter(function(item) {
+    let filteredData = data.filter((item)=>{
       return (item[threadRendererIndex] != '' && item[threadTotalFastIndex] != '' 
         && item[threadTotalAllIndex] != '' && item[frameTimesIndex] != '');
     });
@@ -59,17 +63,11 @@ export default class Parser {
       this.processedData.push(newSite);
     }
 
-    this.fillTraces(traceNames);
+    this.fillTraces(this.ctTraceNames);
   }
 
   // Parses Pinpoint data
   parsePinpointData(){
-    // Add more metrics here if needed
-    let traceNames = ['frame_times', 'mean_frame_time', 'mean_input_event_latency'];
-    let traceNames1 = ['frame_time_discrepancy', 'first_gesture_scroll_update_latency'];
-    let traceNames2 = ['queueing_durations', 'input_event_latency', 'main_thread_scroll_latency'];
-    let traceNames3 = ['mean_main_thread_scroll_latency', 'percentage_smooth'];
-
     let headers = this.rawData[0];
     let data = this.rawData.slice(1,-1);
 
@@ -79,10 +77,10 @@ export default class Parser {
     let valueIndex = headers.indexOf('avg');
 
     // Only use rows containg with-patch data (indicated by '+')
-    let filteredData = data.filter(function(item) {
+    let filteredData = data.filter((item)=>{
       let name = item[nameIndex];
-      return (traceNames.indexOf(name) >= 0 || traceNames1.indexOf(name) >= 0 ||
-        traceNames2.indexOf(name) >= 0 || traceNames3.indexOf(name) >= 0); 
+      return (this.ppTraceNames.indexOf(name) >= 0 || this.ppTraceNames1.indexOf(name) >= 0 ||
+        this.ppTraceNames2.indexOf(name) >= 0 || this.ppTraceNames3.indexOf(name) >= 0); 
       //return (item[displayLabelIndex] && item[displayLabelIndex].includes('+'));
     });
 
@@ -90,20 +88,15 @@ export default class Parser {
       this.addData(filteredData[i], nameIndex, pageNameIndex, valueIndex);
     }
 
-    this.fillTraces(traceNames);
+    this.fillTraces(this.ppTraceNames);
   }
 
   addData(row, nameIndex, pageNameIndex, valueIndex){
-    let traceNames = ['frame_times', 'mean_frame_time', 'mean_input_event_latency'];
-    let traceNames1 = ['frame_time_discrepancy', 'first_gesture_scroll_update_latency'];
-    let traceNames2 = ['queueing_durations', 'input_event_latency', 'main_thread_scroll_latency'];
-    let traceNames3 = ['mean_main_thread_scroll_latency', 'percentage_smooth'];
-
     let dataName = row[nameIndex];
-    let mainDataIndex = traceNames.indexOf(dataName);
-    let dataIndex1 = traceNames1.indexOf(dataName);
-    let dataIndex2 = traceNames2.indexOf(dataName);
-    let dataIndex3 = traceNames3.indexOf(dataName);
+    let mainDataIndex = this.ppTraceNames.indexOf(dataName);
+    let dataIndex1 = this.ppTraceNames1.indexOf(dataName);
+    let dataIndex2 = this.ppTraceNames2.indexOf(dataName);
+    let dataIndex3 = this.ppTraceNames3.indexOf(dataName);
 
     let pageName = row[pageNameIndex];
 
@@ -113,10 +106,10 @@ export default class Parser {
     if (existing_site == null){
       site = {
         pageName: pageName,
-        data: Array.apply(null, Array(traceNames.length)).map(Number.prototype.valueOf,0),
-        data1: Array.apply(null, Array(traceNames1.length)).map(Number.prototype.valueOf,0),
-        data2: Array.apply(null, Array(traceNames2.length)).map(Number.prototype.valueOf,0),
-        data3: Array.apply(null, Array(traceNames3.length)).map(Number.prototype.valueOf,0)
+        data: Array.apply(null, Array(this.ppTraceNames.length)).map(Number.prototype.valueOf,0),
+        data1: Array.apply(null, Array(this.ppTraceNames1.length)).map(Number.prototype.valueOf,0),
+        data2: Array.apply(null, Array(this.ppTraceNames2.length)).map(Number.prototype.valueOf,0),
+        data3: Array.apply(null, Array(this.ppTraceNames3.length)).map(Number.prototype.valueOf,0)
       };
     } else {
       site = existing_site;

@@ -1,12 +1,12 @@
 var path = require('path')
 
 module.exports = {
-  entry: './src/main.js',
+  entry: './src/index.js',
   mode: 'production',
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: 'metrics-vis.min.js',
-    library: 'MetricsVis',
+    filename: 'metrics-visualizer.min.js',
+    library: 'MetricsVisualizer',
     libraryTarget: 'umd',
   },
   module: {

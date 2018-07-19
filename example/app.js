@@ -6,10 +6,10 @@ function UploadFile(){
 
   reader.onload = function(event) {
     let content = event.target.result;
-    let csv = Papa.parse(content);
-    if (csv) {
-      MetricsVis.init(document.getElementById('main'), csv.data, GetDataSource(), 
+    if (content) {
+      let visualizer = new MetricsVisualizer(document.getElementById('main'), content, GetDataSource(), 
         window.innerHeight * 0.8, window.innerWidth * 0.8, true);
+      visualizer.createPlot();
     } else {
       alert('No data to import!');
     }
